@@ -3402,6 +3402,22 @@ u8 CalculateEnemyPartyCount(void)
     return gEnemyPartyCount;
 }
 
+u16 CalculateCostForHealing(void)
+{
+    u16 price;
+    s32 a;
+    price = 0;
+    CalculatePlayerPartyCount();
+    
+    for (a = 0; a < gPlayerPartyCount; a++)
+    {
+        price = price + (GetMonData(&gPlayerParty[a], MON_DATA_MAX_HP) - GetMonData(&gPlayerParty[a], MON_DATA_HP)) * 11;
+        if (GetMonData(&gPlayerParty[a], MON_DATA_STATUS) != STATUS1_NONE) price = price + 500;
+    }
+    ConvertIntToDecimalStringN(gStringVar2, price, STR_CONV_MODE_LEFT_ALIGN, 10);
+    return price;
+}
+
 u8 GetMonsStateToDoubles(void)
 {
     s32 aliveCount = 0;

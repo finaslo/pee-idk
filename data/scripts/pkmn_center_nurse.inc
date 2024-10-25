@@ -1,11 +1,13 @@
 Common_EventScript_PkmnCenterNurse::
 	lock
 	faceplayer
+	setvar VAR_0x8005, 0
+	specialvar VAR_0x8005, CalculateCostForHealing
 	setvar VAR_0x8004, 0
 	specialvar VAR_RESULT, CountPlayerTrainerStars
 	goto_if_eq VAR_RESULT, 4, EventScript_PkmnCenterNurse_GoldCard
 	msgbox gText_WouldYouLikeToRestYourPkmn, MSGBOX_YESNO
-	goto_if_eq VAR_RESULT, YES, EventScript_PkmnCenterNurse_HealPkmn
+	goto_if_eq VAR_RESULT, YES, EventScript_CheckIfEnoughForHealing
 	goto_if_eq VAR_RESULT, NO, EventScript_PkmnCenterNurse_Goodbye
 	end
 
@@ -13,9 +15,21 @@ EventScript_PkmnCenterNurse_Goodbye::
 	message gText_WeHopeToSeeYouAgain
 	return
 
+EventScript_PkmnCenterNurse_NotEnoughMoney::
+	message gText_YouDontHaveEnough
+	return
+
+EventScript_CheckIfEnoughForHealing::
+	setvar VAR_0x8005, 0
+	specialvar VAR_0x8005, CalculateCostForHealing
+	specialvar VAR_RESULT, IsEnoughForCostInVar0x8005
+	goto_if_eq VAR_RESULT, 1, EventScript_PkmnCenterNurse_HealPkmn
+	goto EventScript_PkmnCenterNurse_NotEnoughMoney
+
 @ VAR_0x8004 is 1 when player has Gold Card; jumps are identical
 EventScript_PkmnCenterNurse_HealPkmn::
 	incrementgamestat GAME_STAT_USED_POKECENTER
+	special SubtractMoneyFromVar0x8005
 	call_if_eq VAR_0x8004, 0, EventScript_PkmnCenterNurse_IllTakeYourPkmn
 	call_if_eq VAR_0x8004, 1, EventScript_PkmnCenterNurse_IllTakeYourPkmn2
 	waitmessage
