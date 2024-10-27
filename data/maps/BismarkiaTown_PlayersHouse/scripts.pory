@@ -1,0 +1,30 @@
+const MOM_ID = 1
+
+mapscripts BismarkiaTown_PlayersHouse_MapScripts {
+    
+}
+
+script BismarkiaTown_PlayersHouse_GetOut {
+    lockall
+    delay(10)
+    playse(SE_PIN)
+    applymovement(MOM_ID, Common_Movement_ExclamationMark)
+    waitmovement(0)
+    delay(48)
+    applymovement(MOM_ID, BismarkiaTown_PlayersHouse_MomApproach)
+    waitmovement(0)
+    msgbox(format("Ay bro i got ya pokedex thingy from the delivery men\pSet da clok or smth"), MSGBOX_DEFAULT)
+    setflag(FLAG_SYS_POKEDEX_GET)
+    special(SetUnlockedPokedexFlags)
+    setvar(VAR_CABLE_CLUB_TUTORIAL_STATE, 2)
+    fadescreen(FADE_TO_BLACK)
+    special(StartWallClock)
+    waitstate
+    waitmessage
+    releaseall
+}
+
+movement BismarkiaTown_PlayersHouse_MomApproach {
+    walk_down * 2
+    walk_left * 3
+}
